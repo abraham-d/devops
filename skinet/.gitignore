@@ -2,4 +2,6 @@ bin
 obj
 appsettings.json
 *.db
+*.db*
 **\.vs
+
