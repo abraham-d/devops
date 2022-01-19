@@ -42,7 +42,7 @@ namespace API.Controllers
         }
 
         [HttpGet("emailexists")]
-        public async Task<ActionResult<bool>> EmailExists([FromQuery] string email)
+        public async Task<ActionResult<bool>> CheckEmailExists([FromQuery] string email)
         {
             return await userManager.FindByEmailAsync(email) != null;
         }
@@ -85,6 +85,14 @@ namespace API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
+            if (CheckEmailExists(registerDto.Email).Result.Value)
+            {
+                return new BadRequestObjectResult(new ApiValidationErrorResponse
+                {
+                    Errors = new[] { "Email address in use." }
+                });
+            }
+
             var user = new AppUser
             {
                 DisplayName = registerDto.DisplayName,
